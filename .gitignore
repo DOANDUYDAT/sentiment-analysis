@@ -1,0 +1,16 @@
+venv
+clean_train_reviews.csv
+finefoods.txt
+foods.csv
+glove.6B.100d.txt
+predict.py
+preprocess.py
+train-model.py
+classification-algorithms.py
+.vscode
+
+lstm_model.sav
+naive_bow.sav
+naive_tfidf.sav
+svm_clf_tfidf.sav
+svm_clf-bow.sav

@@ -35,6 +35,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
+import pickle
+
 
 import nltk
 nltk.download('stopwords')
@@ -180,7 +182,7 @@ if __name__ == "__main__":
     Pre-processing
     """
     # converting plain text for next processing
-    convert_plain_to_csv("foods.txt", "foods.csv")
+    convert_plain_to_csv("finefoods.txt", "foods.csv")
 
     # Reading the Data
     train = get_reviews_data("foods.csv")
@@ -194,7 +196,7 @@ if __name__ == "__main__":
     Bag of Words features
     """
 
-    clean_train_reviews = pd.read_csv("clean_train_reviews.csv", nrows=1000)
+    clean_train_reviews = pd.read_csv("clean_train_reviews.csv", nrows=20000)
 
     # ignore all 3* reviews
     clean_train_reviews = clean_train_reviews[clean_train_reviews["score"] != 3]
@@ -230,21 +232,31 @@ if __name__ == "__main__":
     print("Training")
     print("---------------------------")
 
-    names = ["Nearest Neighbors", "Linear SVM", "RBF SVM", "Gaussian Process",
-             "Decision Tree", "Random Forest", "Neural Net", "AdaBoost",
-             "Naive Bayes", "QDA"]
+    names = [
+        # "Nearest Neighbors",
+        "Linear SVM",
+        # "RBF SVM",
+        # "Gaussian Process",
+        # "Decision Tree",
+        # "Random Forest",
+        # "Neural Net",
+        # "AdaBoost",
+        "Naive Bayes",
+        # "QDA"
+        ]
 
     classifiers = [
-        KNeighborsClassifier(3),
+        # KNeighborsClassifier(3),
         SVC(kernel="linear", C=0.025),
-        SVC(gamma=2, C=1),
-        GaussianProcessClassifier(1.0 * RBF(1.0), warm_start=True),
-        DecisionTreeClassifier(max_depth=5),
-        RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
-        MLPClassifier(alpha=1),
-        AdaBoostClassifier(),
+        # SVC(gamma=2, C=1),
+        # GaussianProcessClassifier(1.0 * RBF(1.0), warm_start=True),
+        # DecisionTreeClassifier(max_depth=5),
+        # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
+        # MLPClassifier(alpha=1),
+        # AdaBoostClassifier(),
         GaussianNB(),
-        QuadraticDiscriminantAnalysis()]
+        # QuadraticDiscriminantAnalysis()
+        ]
 
     # iterate over classifiers
     results = {}
@@ -252,6 +264,10 @@ if __name__ == "__main__":
     for name, clf in zip(names, classifiers):
         print("Training " + name + " classifier...")
         clf.fit(X_train, y_train)
+
+        #save model
+        file_name = '-'.join(name.split()).lower() + '.sav'
+        pickle.dump(clf, open(file_name, 'wb'))
         score = clf.score(X_test, y_test)
         results[name] = score
 
